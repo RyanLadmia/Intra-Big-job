@@ -112,11 +112,12 @@ export const useGlobalMessages = () => {
       }
       
       try {
-        // Fetch from API
+        // Fetch from API with enhanced error handling
         const response = await apiService.get('/messages/recent', {
           ...apiService.withAuth(),
-          timeout: 5000,  // Set an explicit timeout of 5 seconds
-          retries: 2     // Allow 2 retries
+          timeout: 8000,   // Augmenter le timeout à 8 secondes
+          retries: 2,      // Permettre 2 tentatives
+          noCache: false   // Permettre l'utilisation du cache
         });
         
         // Add fallback for missing or malformed response
@@ -139,12 +140,20 @@ export const useGlobalMessages = () => {
         return serverMessages;
       } catch (err) {
         console.error('Failed to fetch global messages:', err);
+        
+        if (err.code === 'ECONNABORTED') {
+          // Inform in logs that we're using cached messages due to timeout
+          console.warn('API timeout, using cached messages');
+        }
+        
         // Return stored messages as fallback if available, otherwise use mock data
         return storedMessages || createMockMessages();
       }
     },
     initialData: () => loadFromStorage('global_chat_messages') || createMockMessages(),
-    staleTime: 30000, // 30 seconds
+    staleTime: 60000, // Augmenter à 60 secondes pour réduire les requêtes fréquentes
+    retry: 1,         // Limiter à 1 tentative de la requête entière
+    retryDelay: 1000, // Attendre 1 seconde avant de réessayer
   });
   
   // Mutation for sending a message
@@ -249,11 +258,12 @@ export const usePrivateMessages = (userId) => {
       }
       
       try {
-        // Fetch from API
+        // Fetch from API with enhanced error handling
         const response = await apiService.get(`/messages/private/${userId}`, {
           ...apiService.withAuth(),
-          timeout: 5000,  // Set an explicit timeout of 5 seconds
-          retries: 2     // Allow 2 retries
+          timeout: 8000,  // Augmenter le timeout à 8 secondes
+          retries: 2,     // Permettre 2 tentatives
+          noCache: false  // Permettre l'utilisation du cache
         });
         
         // Add fallback for missing or malformed response
@@ -276,13 +286,21 @@ export const usePrivateMessages = (userId) => {
         return serverMessages;
       } catch (err) {
         console.error(`Failed to fetch private messages for user ${userId}:`, err);
-        // Return stored messages as fallback if available
+        
+        if (err.code === 'ECONNABORTED') {
+          // Inform in logs that we're using cached messages due to timeout
+          console.warn('API timeout, using cached private messages');
+        }
+        
+        // Return stored messages as fallback if available, otherwise use mock data
         return storedMessages || createMockPrivateMessages(userId);
       }
     },
     initialData: () => loadFromStorage(storageKey) || createMockPrivateMessages(userId),
     enabled: !!userId, // Only run query if userId is provided
-    staleTime: 30000, // 30 seconds
+    staleTime: 60000, // Augmenter à 60 secondes pour réduire les requêtes fréquentes
+    retry: 1,         // Limiter à 1 tentative de la requête entière
+    retryDelay: 1000, // Attendre 1 seconde avant de réessayer
   });
   
   // Mutation for sending a private message

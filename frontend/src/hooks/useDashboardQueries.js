@@ -43,7 +43,7 @@ export const useUserData = () => {
 
   const minimalUserData = getMinimalUserData();
 
-  return useApiQuery('/me', ['user-data', getUserKey(), sessionId], {
+  return useApiQuery('/api/me', ['user-data', getUserKey(), sessionId], {
     staleTime: 30 * 60 * 1000, // 30 minutes
     cacheTime: 60 * 60 * 1000, // 1 heure
     refetchOnWindowFocus: false,
@@ -171,7 +171,7 @@ export const useAdminDashboardData = () => {
   );
   
   // Load full user data in parallel
-  const userQuery = useApiQuery('/me', ['user-data', sessionId], {
+  const userQuery = useApiQuery('/api/me', ['user-data', sessionId], {
     staleTime: 30 * 60 * 1000, // 30 minutes
     cacheTime: 60 * 60 * 1000, // 1 hour
     refetchOnWindowFocus: false,

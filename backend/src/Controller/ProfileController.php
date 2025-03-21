@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use App\Entity\UserDiploma;
 
 
-#[Route('/api/profil')]
+#[Route('/api/profile')]
 class ProfileController extends AbstractController
 {
     private $security;

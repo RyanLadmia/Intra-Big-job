@@ -49,6 +49,15 @@ export function useApiQuery(endpoint, queryKey, options = {}) {
     options.staleTime = 0; // Always consider stale
     options.refetchOnMount = true;
     options.refetchOnWindowFocus = true;
+    
+    // Optimiser la récupération des images de profil
+    if (isProfilePicture) {
+      // Ajouter des options spécifiques pour les requêtes de photo de profil
+      options.retry = 1;        // Limiter les tentatives
+      options.retryDelay = 500; // Attendre moins avant de réessayer
+      options.refetchInterval = false; // Désactiver le refetch automatique
+      options.refetchOnReconnect = false; // Ne pas refetch automatiquement lors de la reconnexion
+    }
   }
   
   return useQuery({
@@ -58,9 +67,23 @@ export function useApiQuery(endpoint, queryKey, options = {}) {
         // Add timestamp for special endpoints to prevent browser caching
         const queryParams = (isProfilePicture || isDocumentEndpoint) ? { _t: Date.now() } : {};
         
+        // Configure timeout based on endpoint type
+        const timeout = isProfilePicture ? 5000 : // 5s pour les images de profil
+                        isDocumentEndpoint ? 8000 : // 8s pour les documents
+                        15000; // 15s par défaut
+        
         // Use the enhanced cache system from apiService
-        return await apiService.get(endpoint, { params: queryParams }, true, options.staleTime || 5 * 60 * 1000);
+        return await apiService.get(endpoint, { 
+          params: queryParams,
+          timeout, // Appliquer le timeout configuré
+          retries: isProfilePicture ? 1 : 2 // Limiter les retries pour les images de profil
+        }, true, options.staleTime || 5 * 60 * 1000);
       } catch (error) {
+        // Si c'est une erreur de timeout pour une image de profil, retourner un avatar par défaut
+        if (isProfilePicture && error.code === 'ECONNABORTED') {
+          console.warn('Profile picture request timed out, using default avatar');
+          return { url: '/assets/default-avatar.svg' }; // Retourner l'avatar SVG par défaut
+        }
         throw error;
       }
     },

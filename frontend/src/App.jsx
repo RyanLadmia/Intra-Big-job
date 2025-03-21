@@ -175,7 +175,7 @@ const PrefetchHandler = () => {
             queryKey: ['user-data', 'anonymous', sessionId],
             queryFn: async () => {
               const { default: apiService } = await import('./lib/services/apiService');
-              return await apiService.get('/me', {}, true, 30 * 60 * 1000);
+              return await apiService.get('/api/me', {}, true, 30 * 60 * 1000);
             },
             staleTime: 30 * 60 * 1000,
             cacheTime: 60 * 60 * 1000

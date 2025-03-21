@@ -10,7 +10,7 @@ const profilService = {
    */
   getUserData: async () => {
     try {
-      const response = await apiService.get('/api/profil/user-data');
+      const response = await apiService.get('/api/profile/user-data');
       return response.data.data.user;
     } catch (error) {
       console.error('Erreur lors de la récupération des données utilisateur:', error);
@@ -24,7 +24,7 @@ const profilService = {
    */
   getUserDiplomas: async () => {
     try {
-      const response = await apiService.get('/api/profil/diplomas');
+      const response = await apiService.get('/api/profile/diplomas');
       return response.data.data.diplomas;
     } catch (error) {
       console.error('Erreur lors de la récupération des diplômes:', error);
@@ -38,7 +38,7 @@ const profilService = {
    */
   getUserAddresses: async () => {
     try {
-      const response = await apiService.get('/api/profil/addresses');
+      const response = await apiService.get('/api/profile/addresses');
       return response.data.data.addresses;
     } catch (error) {
       console.error('Erreur lors de la récupération des adresses:', error);
@@ -52,7 +52,7 @@ const profilService = {
    */
   getUserStats: async () => {
     try {
-      const response = await apiService.get('/api/profil/stats');
+      const response = await apiService.get('/api/profile/stats');
       return response.data.data.stats;
     } catch (error) {
       console.error('Erreur lors de la récupération des statistiques:', error);
@@ -66,7 +66,7 @@ const profilService = {
    */
   getAllProfilData: async () => {
     try {
-      const response = await apiService.get('/api/profil/all');
+      const response = await apiService.get('/api/profile/all');
       
       // La réponse est déjà response.data, donc vérifiez directement data
       if (response && response.data) {

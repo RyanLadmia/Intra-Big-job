@@ -55,7 +55,7 @@ const UserProfileSettings = () => {
     isError: isProfileError,
     error: profileError,
     refetch: refetchProfile
-  } = useApiQuery('/api/profil/consolidated', 'userProfileData', {
+  } = useApiQuery('/profile/consolidated', 'userProfileData', {
     refetchOnWindowFocus: false,
     staleTime: 0, // Ensure we always get fresh data
     cacheTime: 0, // Disable caching to prevent stale data

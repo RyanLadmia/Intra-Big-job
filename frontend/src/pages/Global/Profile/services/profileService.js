@@ -21,7 +21,7 @@ class ProfileService {
         return profileCache.userData;
       }
       
-      const response = await apiService.get('/api/profil/user-data');
+      const response = await apiService.get('/api/profile/user-data');
       
       // Mettre en cache les données
       profileCache.userData = response.data;
@@ -61,7 +61,7 @@ class ProfileService {
 
   async getDiplomas() {
     try {
-      const response = await apiService.get('/api/profil/diplomas');
+      const response = await apiService.get('/api/profile/diplomas');
       return response.data;
     } catch (error) {
       throw error;
@@ -70,7 +70,7 @@ class ProfileService {
 
   async getAddresses() {
     try {
-      const response = await apiService.get('/api/profil/addresses');
+      const response = await apiService.get('/api/profile/addresses');
       return response.data;
     } catch (error) {
       throw error;
@@ -79,7 +79,7 @@ class ProfileService {
 
   async getStats() {
     try {
-      const response = await apiService.get('/api/profil/stats');
+      const response = await apiService.get('/api/profile/stats');
       return response.data;
     } catch (error) {
       throw error;
@@ -100,7 +100,7 @@ class ProfileService {
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
       
       try {
-        const response = await apiService.get('/api/profil/consolidated', {
+        const response = await apiService.get('/profile/consolidated', {
           signal: controller.signal
         });
         
@@ -200,7 +200,7 @@ class ProfileService {
     }
     
     try {
-      const response = await apiService.get(`/api/profil/public/${userId}`);
+      const response = await apiService.get(`/api/profile/public/${userId}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -260,7 +260,7 @@ class ProfileService {
   
   async updateAddress(addressData) {
     try {
-      const response = await apiService.put('/api/profil/address', addressData);
+      const response = await apiService.put('/api/profile/address', addressData);
       
       // Invalider le cache après une mise à jour
       this.invalidateCache();

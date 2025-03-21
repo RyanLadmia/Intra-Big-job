@@ -215,10 +215,10 @@ export const authService = {
       });
       
       // Try the correct endpoint format - simplify the path construction
-      const correctApiPath = '/api/profile';
+      const correctApiPath = '/profile';
       
       // Fetch user data from API with the corrected path
-      const dataPromise = apiService.get('/profile', { 
+      const dataPromise = apiService.get(correctApiPath, { 
         noCache: false,    // Use cache if available
         retries: 0,        // Don't retry on failure
         timeout: 2000      // Short timeout
@@ -528,7 +528,7 @@ export const authService = {
           retries: 3 // Allow up to 3 retries
         };
         
-        const response = await apiService.get('/me', { ...apiService.withAuth(), ...options });
+        const response = await apiService.get('/api/me', { ...apiService.withAuth(), ...options });
         
         // Extraire l'objet utilisateur si la réponse contient un objet "user"
         let userData = response;
